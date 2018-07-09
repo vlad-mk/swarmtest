@@ -1,0 +1,103 @@
+buildscript {
+    version = System.getProperty('swarmVersion') ?: '2.0.0.Final'
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
+        classpath "io.thorntail:thorntail-gradle-plugin:$version"
+//        classpath "org.wildfly.swarm:wildfly-swarm-gradle-plugin:2018.5.0"
+//        compile group: 'io.thorntail', name: 'thorntail-gradle-plugin', version: version
+//        classpath group: 'org.wildfly.swarm', name: 'wildfly-swarm-gradle-plugin', version: '2018.5.0'
+
+    }
+}
+apply plugin: "io.spring.dependency-management"
+apply plugin: 'wildfly-swarm'
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'idea'
+//apply plugin: 'application'
+
+//mainClassName = 'xxx.inc.app.MyMain'
+group 'xxx.inc'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+project.setBuildDir 'target/build'
+
+idea.module {
+    inheritOutputDirs = false
+    outputDir = file('target/build-idea/classes/main')
+    testOutputDir = file('target/build-idea/classes/test')
+
+    //resources
+    sourceDirs += file('src/main/webapp')
+    resourceDirs += file('src/main/webapp')
+    
+    sourceDirs += file('src/main/resources')
+    testSourceDirs += file('src/test/resources')
+    
+}
+
+
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { 
+        url 'https://maven.repository.redhat.com/nexus/content/repositories/thirdparty-releases/'
+    }
+    maven {
+        url "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/"
+    }
+    maven {
+        url "http://repo.spring.io/plugins-release"
+    }
+}
+
+
+dependencies {
+//    compile "org.wildfly.swarm:jaxrs"
+//    compile "org.wildfly.swarm:datasources"
+    compile "io.thorntail:jaxrs"
+    compile "io.thorntail:datasources"
+    compile "io.thorntail:logging"
+//    compile "io.thorntail:swagger-webapp"
+    compile group: 'com.h2database', name: 'h2', version: '1.4.197'
+
+
+//    compile group: 'org.glassfish', name: 'javax.el-impl', version: '3.0.1-b08-jbossorg-1'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+swarm {
+    properties {
+        swarm.http.port = 8181
+        my.app.property = 'biscuits'
+    }
+
+    bundleDependencies = false
+    moduleDirs = [new File(buildDir, 'resources/main/modules')]
+//    propertiesFile = new File(bu  ildDir, "resources/main/some.properties")
+}
+
+wrapper {
+    gradleVersion '4.7'
+}
+
+
+
+
+dependencyManagement {
+    imports {
+//        mavenBom "org.wildfly.swarm:bom:2018.5.0"
+        mavenBom "io.thorntail:bom-all:2.0.0.Final"
+    }
+}
+
