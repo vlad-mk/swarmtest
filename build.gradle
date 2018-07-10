@@ -20,7 +20,7 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'idea'
 //apply plugin: 'application'
-
+//
 //mainClassName = 'xxx.inc.app.MyMain'
 group 'xxx.inc'
 version '1.0-SNAPSHOT'
@@ -45,7 +45,7 @@ idea.module {
 
 
 
-
+//
 repositories {
     mavenLocal()
     mavenCentral()
@@ -64,11 +64,13 @@ repositories {
 dependencies {
 //    compile "org.wildfly.swarm:jaxrs"
 //    compile "org.wildfly.swarm:datasources"
-    compile "io.thorntail:jaxrs"
-    compile "io.thorntail:datasources"
-    compile "io.thorntail:logging"
+    compile "io.thorntail:jaxrs:2.0.0.Final"
+    compile "io.thorntail:cdi:2.0.0.Final"
+    compile "io.thorntail:datasources:2.0.0.Final"
+    compile "io.thorntail:logging:2.0.0.Final"
 //    compile "io.thorntail:swagger-webapp"
     compile group: 'com.h2database', name: 'h2', version: '1.4.197'
+//    compile 'javax.enterprise:cdi-api:1.2'
 
 
 //    compile group: 'org.glassfish', name: 'javax.el-impl', version: '3.0.1-b08-jbossorg-1'
@@ -84,7 +86,7 @@ swarm {
 
     bundleDependencies = false
     moduleDirs = [new File(buildDir, 'resources/main/modules')]
-//    propertiesFile = new File(bu  ildDir, "resources/main/some.properties")
+//    propertiesFile = new File(buildDir, "resources/main/some.properties")
 }
 
 wrapper {

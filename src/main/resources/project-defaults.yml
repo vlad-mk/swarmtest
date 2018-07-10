@@ -1,7 +1,5 @@
 
 swarm:
-  deployment:
-    swarmtest-1.0-SNAPSHOT.war
   loggin:
     pattern-formatters:
       LOG_FORMATTER:

@@ -1,14 +1,21 @@
 package xxx.inc.app;
 
+import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.wildfly.swarm.Swarm;
 import org.wildfly.swarm.bootstrap.Main;
 import org.wildfly.swarm.datasources.DatasourcesFraction;
 import org.wildfly.swarm.jaxrs.JAXRSArchive;
 
+import java.io.File;
+
 public class MyMain {
     
+    private static final String WEBAPP_SRC = "src/main/webapp";
 
     public static void main(String... args) throws Exception {
         // Instantiate the container
@@ -27,10 +34,19 @@ public class MyMain {
 //                }));
 ;
         // Create one or more deployments
-        JAXRSArchive deployment = ShrinkWrap.create(JAXRSArchive.class);//, "swarmtest-1.0-SNAPSHOT.war");
-        deployment.addPackage(MyMain.class.getPackage());
- 
-        deployment.addAllDependencies();
+        JAXRSArchive jaxrsArchive = ShrinkWrap.create(JAXRSArchive.class);//, "swarmtest-1.0-SNAPSHOT.war");
+        WebArchive webArchive = ShrinkWrap.create(WebArchive.class);//, "test.war");//, "swarmtest-1.0-SNAPSHOT.war");
+        jaxrsArchive.addPackage(MyMain.class.getPackage());
+        jaxrsArchive.addAllDependencies();
+        webArchive.merge(jaxrsArchive);
+        webArchive.merge(ShrinkWrap.create(GenericArchive.class).as(ExplodedImporter.class)
+                        .importDirectory(WEBAPP_SRC).as(GenericArchive.class),
+                "/", Filters.exclude("WEB-INF"));
+//        for (File f : new File(WEBAPP_SRC).listFiles()) {
+//            webArchive.addAsWebResource(f);
+//        }
+//        webArchive.merge(jaxrsArchive);
+//        deployment.addAllDependencies();
 //        deployment.addAsW
 //        System.out.println("+ " + MyMain.class.getClassLoader().getResource("project-defaults.yml"));
 //        deployment.addAsWebResource(
@@ -43,6 +59,7 @@ public class MyMain {
 //        deployment.addClass(MyResource.class);
 
         swarm.start();
-        swarm.deploy(deployment);
+//        swarm.deploy(jaxrsArchive);
+        swarm.deploy(webArchive);
     }
 }
