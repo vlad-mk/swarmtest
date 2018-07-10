@@ -3,11 +3,15 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
         classpath "io.thorntail:thorntail-gradle-plugin:$version"
+        classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
 //        classpath "org.wildfly.swarm:wildfly-swarm-gradle-plugin:2018.5.0"
 //        compile group: 'io.thorntail', name: 'thorntail-gradle-plugin', version: version
 //        classpath group: 'org.wildfly.swarm', name: 'wildfly-swarm-gradle-plugin', version: '2018.5.0'
@@ -19,6 +23,8 @@ apply plugin: 'wildfly-swarm'
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'idea'
+apply plugin: 'com.moowork.node'
+
 //apply plugin: 'application'
 //
 //mainClassName = 'xxx.inc.app.MyMain'
@@ -29,6 +35,10 @@ ext {
     versions = [
             thorntail: '2.0.0.Final'
             ]
+
+    cacheDir = gradle.getGradleUserHomeDir() as String ?: "${System.getProperty("user.home")}/.cache/gradle"
+    new File(cacheDir).mkdirs()
+
 }
 
 sourceCompatibility = 1.8
@@ -49,7 +59,51 @@ idea.module {
     
 }
 
+node {
+    version = '10.6.0'
+    npmVersion = '6.1.0'
+    distBaseUrl = 'https://nodejs.org/dist'
+    download = true
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.projectDir}/npm/myapp")
 
+//    nodeModulesDir = file("${project.buildDir}/xxx")
+    nodeModulesDir = file("${project.projectDir}/npm/myapp")
+}
+
+
+task npmCacheConfig(type: NpmTask) {
+    description = "Configure the NPM cache"
+    def npmCacheDir = "${cacheDir}/caches/npm"
+    outputs.files file(npmCacheDir)
+    args = [ 'config', 'set', 'cache', npmCacheDir ]
+}
+
+/*
+task npmPackages(type: NpmTask, dependsOn: npmCacheConfig) {
+    description = "Install Node.js packages"
+    args = [ 'install' ]
+    inputs.files file('package.json')
+    outputs.files file('${project.buildDir}/node_modules')
+}
+*/
+
+ext {
+    ng = file( node.nodeModulesDir.path +'/node_modules/@angular/cli/bin/ng')
+}
+
+
+task acli(type: NodeTask) {
+    script = ng
+    args = ['--help']
+}
+
+task ngBuild(type: NodeTask) {
+    script = ng
+    args = ['build', '--base-href=/', '--prod', '--output-path=../../src/main/webapp/']
+//    ng build --base-href / --prod --output-path=../../xx/webapp/
+    workingDir = node.npmWorkDir
+}
 
 //
 repositories {
