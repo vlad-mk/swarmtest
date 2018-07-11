@@ -1,5 +1,7 @@
 
 swarm:
+  port.offset: 1
+#  http.port: 8181
   loggin:
     pattern-formatters:
       LOG_FORMATTER:

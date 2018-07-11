@@ -16,6 +16,7 @@ import java.io.File;
 public class MyMain {
     
     private static final String WEBAPP_SRC = "src/main/webapp";
+    private static final String RESOURCES_SRC = "src/main/resources";
 
     public static void main(String... args) throws Exception {
         // Instantiate the container
@@ -40,7 +41,7 @@ public class MyMain {
         jaxrsArchive.addAllDependencies();
         webArchive.merge(jaxrsArchive);
         webArchive.merge(ShrinkWrap.create(GenericArchive.class).as(ExplodedImporter.class)
-                        .importDirectory(WEBAPP_SRC).as(GenericArchive.class),
+                        .importDirectory(WEBAPP_SRC)/*.importDirectory(RESOURCES_SRC)*/.as(GenericArchive.class),
                 "/", Filters.exclude("WEB-INF"));
 //        for (File f : new File(WEBAPP_SRC).listFiles()) {
 //            webArchive.addAsWebResource(f);
@@ -58,7 +59,7 @@ public class MyMain {
         // Add resource to deployment
 //        deployment.addClass(MyResource.class);
 
-        swarm.start();
+        swarm.withProperty("swarm.http.port", "8181").start();
 //        swarm.deploy(jaxrsArchive);
         swarm.deploy(webArchive);
     }
