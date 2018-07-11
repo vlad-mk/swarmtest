@@ -8,6 +8,10 @@ import { UsersComponent } from './users/users.component';
 import { DetailsComponent } from './details/details.component';
 import { PostsComponent } from './posts/posts.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from '@angular/material/button' ;
+// import { CdkTreeModule } from '@angular/cdk/tree';
 
 import { HttpClientModule } from "@angular/common/http";
 
@@ -23,8 +27,15 @@ import { HttpClientModule } from "@angular/common/http";
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatTreeModule,
+    MatIconModule,
+    MatButtonModule
+    // CdkTreeModule
   ],
+/*  exports: [
+    MatTreeModule
+  ],*/
   providers: [],
   bootstrap: [AppComponent]
 })
