@@ -8,12 +8,11 @@ import { UsersComponent } from './users/users.component';
 import { DetailsComponent } from './details/details.component';
 import { PostsComponent } from './posts/posts.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatTreeModule } from '@angular/material/tree';
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from '@angular/material/button' ;
-// import { CdkTreeModule } from '@angular/cdk/tree';
+import { MatIconModule, MatButtonModule, MatMenuModule, MatSidenavModule, MatCheckboxModule, MatToolbarModule, MatListModule } from "@angular/material";
 
 import { HttpClientModule } from "@angular/common/http";
+import { SideNavComponent } from './side-nav/side-nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   declarations: [
@@ -21,16 +20,23 @@ import { HttpClientModule } from "@angular/common/http";
     SidebarComponent,
     UsersComponent,
     DetailsComponent,
-    PostsComponent
+    PostsComponent,
+    SideNavComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatTreeModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatMenuModule,
+    MatSidenavModule,
+    MatCheckboxModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatListModule
+
     // CdkTreeModule
   ],
 /*  exports: [
